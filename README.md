@@ -1,24 +1,3 @@
-# test-demo
+# 这个项目的主要功能是放算法题目
 
-## Project setup
-```
-npm install
-```
-
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
-
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+具体有leetcode题目，还有面试上遇到的
