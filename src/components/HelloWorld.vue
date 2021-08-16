@@ -64,16 +64,16 @@ export default {
     }
   },
   beforeCreate() {
-    console.log('HelloWorld beforeCreate :>> ')
+    // console.log('HelloWorld beforeCreate :>> ')
   },
   created() {
-    console.log('HelloWorld created :>> ')
+    // console.log('HelloWorld created :>> ')
   },
   beforeMount() {
-    console.log('HelloWorld beforeMount :>> ')
+    // console.log('HelloWorld beforeMount :>> ')
   },
   mounted() {
-    console.log('HelloWorld mounted :>> ')
+    // console.log('HelloWorld mounted :>> ')
     // let self = this // {#} -i -sign -t mounted
     // let msg = 'hello world', msg1 = {a: 0} // {#} -i -sign -t mounted
     // // add(11, 22)

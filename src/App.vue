@@ -14,20 +14,20 @@ export default {
     HelloWorld,
   },
   beforeCreate() {
-    console.log("App beforeCreate :>> ");
+    // console.log("App beforeCreate :>> ");
   },
   created() {
-    console.log("App created :>> ");
+    // console.log("App created :>> ");
   },
   beforeMount() {
-    console.log("App beforeMount :>> ");
+    // console.log("App beforeMount :>> ");
   },
   mounted() {
-    console.log("App mounted :>> ");
+    // console.log("App mounted :>> ");
     // leetcode
-    // this.runLeetcode();
+    this.runLeetcode();
     // others code
-    this.runOthers()
+    // this.runOthers()
   },
   methods: {
     // 运行所有的leetcode项目
@@ -59,6 +59,15 @@ export default {
       // let result = this.strStr(haystack, needle)
       // console.log('result :>> ', result);
 
+      // leetcode 1968
+      // let nums = [10,13,7,8,5,3]
+      // let result = this.rearrangeArray(nums)
+      // console.log('result :>> ', result);
+      // leetcode 1962
+      let piles = [5, 4, 9];
+      let k = 2;
+      let result = this.minStoneSum(piles, k);
+      console.log("result :>> ", result);
     },
     runOthers() {
       // 字节面试题：smartRepeat
@@ -175,51 +184,128 @@ export default {
       return -1;
     },
     // 字节面试题
-    smartRepeat: function(str) {
+    smartRepeat: function (str) {
       // let str = '2[abc]'
-      let stack = []
-      let temp = ''
-      let array = []
-      let index = -1
-      for (let i = 0 ; i < str.length; i ++) {
-        let char = str[i]
+      let stack = [];
+      let temp = "";
+      let array = [];
+      let index = -1;
+      for (let i = 0; i < str.length; i++) {
+        let char = str[i];
         if (!isNaN(Number(char))) {
-          let number = Number(char)
-          stack.push(number)
-          index ++
-        } else if (char == '[') {
-          stack.push(char)
-        } else if (char == ']') {
-          stack.pop()
-          /** 字符串相乘 */ 
-          let num = stack.pop()
+          let number = Number(char);
+          stack.push(number);
+          index++;
+        } else if (char == "[") {
+          stack.push(char);
+        } else if (char == "]") {
+          stack.pop();
+          /** 字符串相乘 */
+          let num = stack.pop();
           // 值为空，则结束当前层，实际值为上层字符串连接
-          if (temp == '') {
+          if (temp == "") {
             // 上层的都连起来
-            temp = array[index + 1].join('')
+            temp = array[index + 1].join("");
           }
           // 得到重复的串
-          let repeat = ''
-          for (let j = 0; j < num; j ++) {
-            repeat += temp
+          let repeat = "";
+          for (let j = 0; j < num; j++) {
+            repeat += temp;
           }
-          temp = repeat
+          temp = repeat;
           // 放入对应层数组
           if (array[index] !== undefined) {
-            array[index].push(temp)
+            array[index].push(temp);
           } else {
-            array[index] = [temp]
+            array[index] = [temp];
           }
 
-          temp = ''
-          index --;
+          temp = "";
+          index--;
         } else {
-          temp += char
+          temp += char;
         }
       }
       // console.log('array :>> ', array[0]);
-      return array[0]
-    }
+      return array[0];
+    },
+    // leetcode 1968
+    rearrangeArray: function (nums) {
+      // 每个数都
+      let result = [];
+      let sortNums = nums.sort((x, y) => x - y);
+      let avg = Math.floor(nums.length / 2);
+      for (let i = 0, j = 0, k = avg; i < nums.length; i++) {
+        if (i % 2 == 0) {
+          result[i] = sortNums[k];
+          k++;
+        } else {
+          result[i] = sortNums[j];
+          j++;
+        }
+      }
+      return result;
+    },
+    // leetcode 1962
+    minStoneSum: function (piles, k) {
+      // 暴力法
+      // for (let i = 0; i < k; i++) {
+      //   let maxIndex = 0;
+      //   let max = piles.reduce((num1, num2, index) => {
+      //     if (num1 < num2) {
+      //       maxIndex = index;
+      //       return num2;
+      //     } else {
+      //       return num1;
+      //     }
+      //   });
+      //   piles[maxIndex] = Math.ceil(max / 2);
+      //   maxIndex = 0;
+      // }
+      // return piles.reduce((sum, a) => sum + a);
+
+
+      // 2、二叉堆法
+      // 维持堆性质
+      function maxHeapify(A, i) {
+        let largest = -1
+        // 左右结点
+        let l = 2 * i
+        let r = 2 * i + 1
+        if (l <= A.length && A[l - 1] > A[i - 1]) {
+          largest = l
+        } else {
+          largest = i
+        }
+        if (r <= A.length && A[r - 1] > A[largest - 1]) {
+          largest = r
+        }
+        if (largest != i) {
+          // 交换
+          let temp = A[i - 1]
+          A[i - 1] = A[largest - 1]
+          A[largest - 1] = temp
+          // 递归
+          maxHeapify(A, largest)
+        }
+      }
+      // 创建堆
+      function buildMaxHeap(A) {
+        for (let i = Math.floor(A.length / 2); i >= 1; i --) {
+          maxHeapify(A, i)
+        }
+      }
+      buildMaxHeap(piles)
+      console.log('piles :>> ', piles);
+      while(k > 0) {
+        piles[0] = Math.ceil(piles[0] / 2)
+        maxHeapify(piles, 1)
+        k --
+      }
+      console.log('piles :>> ', piles);
+      
+      return piles.reduce((sum, a) => sum + a)
+    },
   },
 };
 </script>
