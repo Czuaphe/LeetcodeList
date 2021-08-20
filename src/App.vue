@@ -8,6 +8,8 @@
 <script>
 import HelloWorld from "./components/HelloWorld.vue";
 
+import { BinarySearchTreeNode, BinarySearchTree } from './util/binary-search-tree'
+
 export default {
   name: "App",
   components: {
@@ -27,7 +29,7 @@ export default {
     // leetcode
     this.runLeetcode();
     // others code
-    // this.runOthers()
+    this.runOthers()
   },
   methods: {
     // 运行所有的leetcode项目
@@ -64,16 +66,40 @@ export default {
       // let result = this.rearrangeArray(nums)
       // console.log('result :>> ', result);
       // leetcode 1962
-      let piles = [5, 4, 9];
-      let k = 2;
-      let result = this.minStoneSum(piles, k);
-      console.log("result :>> ", result);
+      // let piles = [5, 4, 9];
+      // let k = 2;
+      // let result = this.minStoneSum(piles, k);
+      // console.log("result :>> ", result);
+    
     },
     runOthers() {
       // 字节面试题：smartRepeat
       // let str = "2[1[a]3[b]2[3[c]4[d]]]"
       // let result = this.smartRepeat(str)
       // console.log('result :>> ', result);
+      // 堆排序
+      // let array = [16, 14, 10, 8, 7, 9, 3, 2, 4, 1]
+      // let result = this.heapSort(array)
+      // console.log('result :>> ', result)
+      // 二叉搜索树
+      let array = [15, 18, 17, 6, 20, 3, 7, 13, 2, 4, 9]
+      let tree = new BinarySearchTree()
+      array.forEach(item => {
+        tree.insert(new BinarySearchTreeNode(item))
+      })
+      console.log('tree.T.root :>> ', tree.T.root);
+      tree.inorderWalk(tree.T.root)
+      let result = tree.iterativeSearch(6)
+      console.log('result :>> ', result);
+      let next = tree.successor(result)
+      console.log('next :>> ', next);
+      console.log('max :>> ', tree.maximum(result));
+      console.log('min :>> ', tree.minimum(result));
+      
+      tree.delete(tree.iterativeSearch(6))
+      console.log('tree.T.root :>> ', tree.T.root);
+      tree.inorderWalk(tree.T.root)
+
     },
     // leetcode 76
     minWindow: function (s, t) {
@@ -248,7 +274,7 @@ export default {
     },
     // leetcode 1962
     minStoneSum: function (piles, k) {
-      // 暴力法
+      // 1、暴力法
       // for (let i = 0; i < k; i++) {
       //   let maxIndex = 0;
       //   let max = piles.reduce((num1, num2, index) => {
@@ -263,49 +289,70 @@ export default {
       //   maxIndex = 0;
       // }
       // return piles.reduce((sum, a) => sum + a);
-
-
       // 2、二叉堆法
-      // 维持堆性质
-      function maxHeapify(A, i) {
-        let largest = -1
-        // 左右结点
-        let l = 2 * i
-        let r = 2 * i + 1
-        if (l <= A.length && A[l - 1] > A[i - 1]) {
-          largest = l
-        } else {
-          largest = i
-        }
-        if (r <= A.length && A[r - 1] > A[largest - 1]) {
-          largest = r
-        }
-        if (largest != i) {
-          // 交换
-          let temp = A[i - 1]
-          A[i - 1] = A[largest - 1]
-          A[largest - 1] = temp
-          // 递归
-          maxHeapify(A, largest)
-        }
-      }
-      // 创建堆
-      function buildMaxHeap(A) {
-        for (let i = Math.floor(A.length / 2); i >= 1; i --) {
-          maxHeapify(A, i)
-        }
-      }
-      buildMaxHeap(piles)
-      console.log('piles :>> ', piles);
+      this.buildMaxHeap(piles)
+      console.log('pilwes :>> ', piles);
       while(k > 0) {
         piles[0] = Math.ceil(piles[0] / 2)
-        maxHeapify(piles, 1)
+        this.maxHeapify(piles, 1)
         k --
       }
       console.log('piles :>> ', piles);
       
       return piles.reduce((sum, a) => sum + a)
     },
+    /**
+     * 堆相关算法
+     */
+    // 维持堆性质
+    maxHeapify(A, i, heapSize = A.length) {
+      let largest = -1
+      // 左右结点
+      let l = 2 * i
+      let r = 2 * i + 1
+      if (l <= heapSize && A[l - 1] > A[i - 1]) {
+        largest = l
+      } else {
+        largest = i
+      }
+      if (r <= heapSize && A[r - 1] > A[largest - 1]) {
+        largest = r
+      }
+      if (largest != i) {
+        // 交换
+        let temp = A[i - 1]
+        A[i - 1] = A[largest - 1]
+        A[largest - 1] = temp
+        // 递归
+        this.maxHeapify(A, largest, heapSize)
+      }
+    },
+    // 创建堆
+    buildMaxHeap(A) {
+      for (let i = Math.floor(A.length / 2); i >= 1; i --) {
+        this.maxHeapify(A, i)
+      }
+    },
+    // 堆排序
+    heapSort(array) {
+      this.buildMaxHeap(array)
+      console.log('array :>> ', array)
+      let heapSize = array.length
+      for (let i = array.length; i >= 2; i --) {
+        
+        let temp = array[i - 1]
+        array[i - 1] = array[0]
+        array[0] = temp
+
+        heapSize --
+        this.maxHeapify(array, 1, heapSize)
+      }
+      return array
+    },
+    /**
+     * 二叉搜索树
+     */
+    
   },
 };
 </script>
