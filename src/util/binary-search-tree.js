@@ -1,7 +1,4 @@
-
-function isNIL(ref) {
-    return ref == undefined || ref == null
-}
+import { isNIL } from "./util.js"
 
 class BinarySearchTreeNode {
     constructor(key) {
