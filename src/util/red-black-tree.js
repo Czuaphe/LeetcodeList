@@ -34,4 +34,22 @@ class RedBlackTree {
         y.left = x
         x.parent = y
     }
+
+    rightRotate(x) {
+        let y = x.right
+        x.right = y.left
+        if (!isNIL(y.left)) {
+            y.left.parent = x
+        }
+        y.parent = x.parent
+        if (isNIL(x.parent)) {
+            this.T.root = y
+        } else if (x == x.parent.left) {
+            x.parent.left = y
+        } else {
+            x.parent.right = y
+        }
+        y.left = x
+        x.parent = y
+    }
 }
