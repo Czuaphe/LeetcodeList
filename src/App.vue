@@ -30,7 +30,7 @@ export default {
     // leetcode
     this.runLeetcode();
     // others code
-    this.runOthers()
+    // this.runOthers()
   },
   methods: {
     // 运行所有的leetcode项目
@@ -71,7 +71,32 @@ export default {
       // let k = 2;
       // let result = this.minStoneSum(piles, k);
       // console.log("result :>> ", result);
-    
+
+      // leetcode 剑指 Offer 22
+      // function ListNode(val) {
+      //   this.val = val;
+      //   this.next = null;
+      // }
+      // // 数组构造链表
+      // let array = [1, 2, 3, 4, 5]
+      // for (let i = 0; i < array.length; i++) {
+      //   array[i] = new ListNode(array[i])
+      //   if (i != 0) {
+      //     array[i - 1].next = array[i]
+      //   }
+      // }
+      
+      // let head = array[0]
+      // let k = 2
+      // let result = this.getKthFromEnd(head, k)
+      // console.log('result :>> ', result)
+
+      // leetcode 1984
+      let nums = [87063,61094,44530,21297,95857,93551,9918]
+      let k = 6
+      let result = this.minimumDifference(nums, k)
+      console.log('result :>> ', result);
+      
     },
     runOthers() {
       // 字节面试题：smartRepeat
@@ -301,6 +326,37 @@ export default {
       }      
       return piles.reduce((sum, a) => sum + a)
     },
+    // leetcode 剑指 Offer 22
+    getKthFromEnd: function(head, k) {
+      let first = head
+      let second = head
+      let number = 0
+      while(first.next) {
+        first = first.next
+        if (number != (k - 1)) {
+            number ++
+        } else {
+            second = second.next
+        }
+      }
+      return second
+    },
+    // leetcode 1984
+    minimumDifference: function(nums, k) {
+      if (k == 1) {
+        return 0
+      }
+      k --
+      nums.sort((a, b) => a - b)
+      let value = Number.MAX_SAFE_INTEGER
+      console.log('nums :>> ', nums);
+      for(let i = 0; i < nums.length - k ; i ++) {
+        if (value > nums[i + k] - nums[i]) {
+          value = nums[i + k] - nums[i]
+        }
+      }
+      return value
+    }
   },
 };
 </script>
