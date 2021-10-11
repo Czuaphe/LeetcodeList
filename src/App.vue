@@ -9,7 +9,8 @@
 import HelloWorld from "./components/HelloWorld.vue";
 
 import { BinarySearchTreeNode, BinarySearchTree } from './util/binary-search-tree'
-import { buildMaxHeap, maxHeapify } from "./util/heap.js";
+import { buildMaxHeap, maxHeapify } from "./util/heap";
+import {} from "./util/red-black-tree"
 
 export default {
   name: "App",
@@ -92,10 +93,10 @@ export default {
       // console.log('result :>> ', result)
 
       // leetcode 1984
-      let nums = [87063,61094,44530,21297,95857,93551,9918]
-      let k = 6
-      let result = this.minimumDifference(nums, k)
-      console.log('result :>> ', result);
+      // let nums = [87063,61094,44530,21297,95857,93551,9918]
+      // let k = 6
+      // let result = this.minimumDifference(nums, k)
+      // console.log('result :>> ', result);
       
     },
     runOthers() {
@@ -128,7 +129,7 @@ export default {
       tree.inorderWalk(tree.T.root)
 
     },
-    // leetcode 76
+    // leetcode 76 滑动窗口法
     minWindow: function (s, t) {
       // 初始化数据
       // 创建左右指针，和结果字符串，创建字典表 如： aba -> {a: 2, b: 1}
@@ -349,14 +350,15 @@ export default {
       k --
       nums.sort((a, b) => a - b)
       let value = Number.MAX_SAFE_INTEGER
-      console.log('nums :>> ', nums);
+      // console.log('nums :>> ', nums);
       for(let i = 0; i < nums.length - k ; i ++) {
         if (value > nums[i + k] - nums[i]) {
           value = nums[i + k] - nums[i]
         }
       }
       return value
-    }
+    },
+
   },
 };
 </script>
