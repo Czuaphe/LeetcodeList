@@ -1,11 +1,11 @@
 import { isNIL } from "./util.js"
 
 class BinarySearchTreeNode {
-    constructor(key) {
+    constructor(key, parent = null, left = null, right = null) {
         this.key = key // 节点值
-        this.parent = null // 父节点
-        this.left = null // 左节点
-        this.right = null // 右节点
+        this.parent = parent // 父节点
+        this.left = left // 左节点
+        this.right = right // 右节点
     }
 }
 

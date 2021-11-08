@@ -1,4 +1,6 @@
-// import { isNIL } from "./util.js"
+function isNIL(x) {
+    return x.key == 'nil'
+}
 
 import { BinarySearchTree, BinarySearchTreeNode } from "./binary-search-tree.js"
 
@@ -8,8 +10,8 @@ const COLOR = {
 }
 
 class RedBlackTreeNode extends BinarySearchTreeNode {
-    constructor(key, color = COLOR.BLACK) {
-        super(key)
+    constructor(key, color, parent = null, left = null, right = null) {
+        super(key, parent, left, right)
         this.color = color // 多了一个颜色属性 black/red
         this.originColor = '' // 仅删除时使用
     }
@@ -18,20 +20,21 @@ class RedBlackTreeNode extends BinarySearchTreeNode {
 class RedBlackTree extends BinarySearchTree {
     constructor() {
         super()
-        this.nil = new RedBlackTreeNode('nil') // 哨兵（所有叶节点的终点）颜色为black，key为nil
-        this.T.root = this.nil
+        // this.nil = new RedBlackTreeNode('nil', COLOR.BLACK) // 哨兵（所有叶节点的终点）颜色为black，key为nil
+        this.T.root = new RedBlackTreeNode('nil', COLOR.BLACK)
     }
+    /* insert start */
     // 左旋 
     leftRotate(x) {
         let y = x.right
         // turn y.left to x.right
         x.right = y.left
-        if (y.left != this.nil) {
+        if (!isNIL(y.left)) {
             y.left.parent = x
         }
         // link x's parent to y
         y.parent = x.parent
-        if (x.parent == this.nil) {
+        if (isNIL(x.parent)) {
             this.T.root = y
         } else if (x == x.parent.left) {
             x.parent.left = y
@@ -46,11 +49,11 @@ class RedBlackTree extends BinarySearchTree {
     rightRotate(x) {
         let y = x.left
         x.left = y.right
-        if (y.right != this.nil) {
-            y.right = x
+        if (!isNIL(y.right)) {
+            y.right.parent = x
         }
         y.parent = x.parent
-        if (x.parent == this.nil) {
+        if (isNIL(x.parent)) {
             this.T.root = y
         } else if (x == x.parent.left) {
             x.parent.left = y
@@ -62,9 +65,9 @@ class RedBlackTree extends BinarySearchTree {
     }
     // 插入节点
     rbInsert(z) {
-        let y = this.nil
+        let y = new RedBlackTreeNode('nil', COLOR.BLACK)
         let x = this.T.root
-        while(x != this.nil) {
+        while(!isNIL(x)) {
             y = x
             if (z.key < x.key) {
                 x = x.left
@@ -73,15 +76,15 @@ class RedBlackTree extends BinarySearchTree {
             }
         }
         z.parent = y
-        if (y == this.nil) {
+        if (isNIL(y)) {
             this.T.root = z
         } else if (z.key < y.key) {
             y.left = z
         } else {
             y.right = z
         }
-        z.left = this.nil
-        z.right = this.nil
+        z.left = new RedBlackTreeNode('nil', COLOR.BLACK, z)
+        z.right = new RedBlackTreeNode('nil', COLOR.BLACK, z)
         z.color = COLOR.RED
         this.rbInsertFixup(z)
     }
@@ -129,9 +132,11 @@ class RedBlackTree extends BinarySearchTree {
         }
         this.T.root.color = COLOR.BLACK
     }
+    /* insert end */
+
     // u子树替换v子树
     rbTransplant(u, v) {
-        if (u.p == this.nil) {
+        if (isNIL(u.parent)) {
             this.T.root = v
         } else if (u == u.parent.left) {
             u.parent.left = v
@@ -145,16 +150,16 @@ class RedBlackTree extends BinarySearchTree {
         let x = null
         let y = z
         y.originColor = y.color
-        if (z.left == this.nil) {
+        if (isNIL(z.left)) {
             x = z.right
             this.rbTransplant(z, z.right)
-        } else if (z.right == this.nil) {
+        } else if (isNIL(z.right)) {
             x = z.left
             this.rbTransplant(z, z.left)
         } else {
-            y = this.minimum(z.right)
-            y.originColor = y.color
-            x = y.right
+            y = this.rbMinimum(z.right)
+            y.originColor = y.color // y = 8 black
+            x = y.right // x = nil
             if (y.parent == z) {
                 x.parent = y
             } else {
@@ -237,7 +242,7 @@ class RedBlackTree extends BinarySearchTree {
     // 根据key的值在树中找到对应节点（非递归版本）
     rbIterativeSearch(key) {
         let x = this.T.root
-        while (x != this.nil && key != x.key) {
+        while (!isNIL(x) && key != x.key) {
             if (key < x.key) {
                 x = x.left
             } else {
@@ -246,10 +251,16 @@ class RedBlackTree extends BinarySearchTree {
         }
         return x
     }
+    // 
+    rbMinimum(x) {
+        // 找到key最小的节点
+        while (!isNIL(x.left)) {
+            x = x.left
+        }
+        return x
+    }
 }
 
-// let node = new RedBlackTreeNode('2', COLOR.RED)
-// console.log('node :>> ', node);
 let tree = new RedBlackTree()
 console.log('tree :>> ', tree);
 tree.rbInsert(new RedBlackTreeNode(11, COLOR.RED))
@@ -261,11 +272,9 @@ tree.rbInsert(new RedBlackTreeNode(15, COLOR.RED))
 tree.rbInsert(new RedBlackTreeNode(5, COLOR.RED))
 tree.rbInsert(new RedBlackTreeNode(8, COLOR.RED))
 tree.rbInsert(new RedBlackTreeNode(4, COLOR.RED))
-tree.inorderWalk(tree.T.root);
-// let node = tree.rbIterativeSearch(4)
-// console.log('node :>> ', node);
-
-
+// tree.inorderWalk()
+let node = tree.rbIterativeSearch(7)
+tree.rbDelete(node)
 
 export {
     RedBlackTreeNode,
