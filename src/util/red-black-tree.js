@@ -158,8 +158,8 @@ class RedBlackTree extends BinarySearchTree {
             this.rbTransplant(z, z.left)
         } else {
             y = this.rbMinimum(z.right)
-            y.originColor = y.color // y = 8 black
-            x = y.right // x = nil
+            y.originColor = y.color 
+            x = y.right 
             if (y.parent == z) {
                 x.parent = y
             } else {
@@ -208,7 +208,7 @@ class RedBlackTree extends BinarySearchTree {
                     x = this.T.root
                 }
             } else {
-                // ???
+                
                 let w = x.parent.left
                 if (w.color == COLOR.RED) {
                     w.color = COLOR.BLACK
@@ -251,9 +251,8 @@ class RedBlackTree extends BinarySearchTree {
         }
         return x
     }
-    // 
+    // 找到key最小的节点
     rbMinimum(x) {
-        // 找到key最小的节点
         while (!isNIL(x.left)) {
             x = x.left
         }
@@ -261,20 +260,30 @@ class RedBlackTree extends BinarySearchTree {
     }
 }
 
+// let tree = new RedBlackTree()
+// console.log('tree :>> ', tree);
+// 举例说明的红黑树
+// tree.rbInsert(new RedBlackTreeNode(11, COLOR.RED))
+// tree.rbInsert(new RedBlackTreeNode(2, COLOR.RED))
+// tree.rbInsert(new RedBlackTreeNode(14, COLOR.RED))
+// tree.rbInsert(new RedBlackTreeNode(1, COLOR.RED))
+// tree.rbInsert(new RedBlackTreeNode(7, COLOR.RED))
+// tree.rbInsert(new RedBlackTreeNode(15, COLOR.RED))
+// tree.rbInsert(new RedBlackTreeNode(5, COLOR.RED))
+// tree.rbInsert(new RedBlackTreeNode(8, COLOR.RED))
+// tree.rbInsert(new RedBlackTreeNode(4, COLOR.RED))
+// tree.inorderWalk()
+// let node = tree.rbIterativeSearch(7)
+// tree.rbDelete(node)
 let tree = new RedBlackTree()
 console.log('tree :>> ', tree);
-tree.rbInsert(new RedBlackTreeNode(11, COLOR.RED))
-tree.rbInsert(new RedBlackTreeNode(2, COLOR.RED))
-tree.rbInsert(new RedBlackTreeNode(14, COLOR.RED))
-tree.rbInsert(new RedBlackTreeNode(1, COLOR.RED))
-tree.rbInsert(new RedBlackTreeNode(7, COLOR.RED))
-tree.rbInsert(new RedBlackTreeNode(15, COLOR.RED))
-tree.rbInsert(new RedBlackTreeNode(5, COLOR.RED))
+tree.rbInsert(new RedBlackTreeNode(41, COLOR.RED))
+tree.rbInsert(new RedBlackTreeNode(38, COLOR.RED))
+tree.rbInsert(new RedBlackTreeNode(31, COLOR.RED))
+tree.rbInsert(new RedBlackTreeNode(12, COLOR.RED))
+tree.rbInsert(new RedBlackTreeNode(19, COLOR.RED))
 tree.rbInsert(new RedBlackTreeNode(8, COLOR.RED))
-tree.rbInsert(new RedBlackTreeNode(4, COLOR.RED))
-// tree.inorderWalk()
-let node = tree.rbIterativeSearch(7)
-tree.rbDelete(node)
+
 
 export {
     RedBlackTreeNode,
