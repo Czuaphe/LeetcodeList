@@ -1,14 +1,14 @@
 <template>
   <div id="app">
     <!-- <img alt="Vue logo" src="./assets/logo.png"> -->
-    <HelloWorld msg="Welcome to Your Vue.js App" />
-    
+    <!-- <HelloWorld msg="Welcome to Your Vue.js App" /> -->
+    <auto-input /> 
   </div>
 </template>
 
 <script>
-import HelloWorld from "./components/HelloWorld.vue";
-
+// import HelloWorld from "./components/HelloWorld.vue";
+import AutoInput from "./components/auto-input.vue"
 import { BinarySearchTreeNode, BinarySearchTree } from './util/binary-search-tree'
 import { buildMaxHeap, maxHeapify } from "./util/heap";
 import {} from "./util/red-black-tree"
@@ -16,7 +16,8 @@ import {} from "./util/red-black-tree"
 export default {
   name: "App",
   components: {
-    HelloWorld,
+    // HelloWorld,
+    AutoInput
   },
   beforeCreate() {
     // console.log("App beforeCreate :>> ");
