@@ -2,13 +2,13 @@
   <div id="app">
     <!-- <img alt="Vue logo" src="./assets/logo.png"> -->
     <!-- <HelloWorld msg="Welcome to Your Vue.js App" /> -->
-    <auto-input /> 
+    <!-- <auto-input />  -->
   </div>
 </template>
 
 <script>
 // import HelloWorld from "./components/HelloWorld.vue";
-import AutoInput from "./components/auto-input.vue"
+// import AutoInput from "./components/auto-input.vue"
 import { BinarySearchTreeNode, BinarySearchTree } from './util/binary-search-tree'
 import { buildMaxHeap, maxHeapify } from "./util/heap";
 import {} from "./util/red-black-tree"
@@ -17,7 +17,7 @@ export default {
   name: "App",
   components: {
     // HelloWorld,
-    AutoInput
+    // AutoInput
   },
   beforeCreate() {
     // console.log("App beforeCreate :>> ");
@@ -31,9 +31,10 @@ export default {
   mounted() {
     // console.log("App mounted :>> ");
     // leetcode
-    this.runLeetcode();
+    // this.runLeetcode();
     // others code
     // this.runOthers()
+    this.reactivity()
   },
   methods: {
     // 运行所有的leetcode项目
@@ -360,7 +361,32 @@ export default {
       }
       return value
     },
-
+    // 《Vuejs 设计与实现》 响应性系统实现
+    reactivity() {
+      const bucket = new Set()
+      let data = {
+        text: 'hello world'
+      }
+      const obj = new Proxy(data, {
+        get(target, key) {
+          bucket.add(effect)
+          return target[key]
+        },
+        set(target, key, newVal) {
+          target[key] = newVal
+          bucket.forEach(fn => fn())
+          return true
+        }
+      })
+      function effect() {
+        document.body.innerText = obj.text
+      }
+      // 执行
+      effect()
+      setTimeout(() => {
+        obj.text = 'hello vue3'
+      }, 2000)
+    },
   },
 };
 </script>
