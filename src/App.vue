@@ -363,28 +363,53 @@ export default {
     },
     // 《Vuejs 设计与实现》 响应性系统实现
     reactivity() {
-      const bucket = new Set()
+      // 设计
       let data = {
         text: 'hello world'
       }
+      const bucket = new WeakMap()
+      // eslint-disable-next-line no-unused-vars
+      let activeEffect
+      function effect(fn) {
+        activeEffect = fn
+        fn()
+      }
+      function track(target, key) {
+        if (!activeEffect) return target[key]
+        let depsMap = bucket.get(target)
+        if (!depsMap) {
+          bucket.set(target, (depsMap = new Map()))
+        }
+        let deps = depsMap.get(key)
+        if (!deps) {
+          depsMap.set(key, (deps = new Set()))
+        }
+        deps.add(activeEffect)
+      }
+      function trigger(target, key) {
+        const depsMap = bucket.get(target)
+        if (!depsMap) return
+        const effects = depsMap.get(key)
+        effects && effects.forEach(fn => fn())
+      }
       const obj = new Proxy(data, {
         get(target, key) {
-          bucket.add(effect)
+          track(target, key)
           return target[key]
         },
         set(target, key, newVal) {
           target[key] = newVal
-          bucket.forEach(fn => fn())
-          return true
+          trigger(target, key)
         }
       })
-      function effect() {
-        document.body.innerText = obj.text
-      }
       // 执行
-      effect()
+      effect(() => {
+        console.log('effect run :>> ');
+        document.body.innerText = obj.text
+      })
       setTimeout(() => {
-        obj.text = 'hello vue3'
+        // obj.text = 'hello vue3'
+        obj.notExist = 'hello vue3'
       }, 2000)
     },
   },
