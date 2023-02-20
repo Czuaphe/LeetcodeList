@@ -365,14 +365,27 @@ export default {
     reactivity() {
       // 设计
       let data = {
+        ok: true,
         text: 'hello world'
       }
       const bucket = new WeakMap()
       // eslint-disable-next-line no-unused-vars
       let activeEffect
       function effect(fn) {
-        activeEffect = fn
-        fn()
+        const effectFn = () => {
+          cleanup(effectFn)
+          activeEffect = effectFn
+          fn()
+        }
+        effectFn.deps = []
+        effectFn()
+      }
+      function cleanup(effectFn) {
+        for (let i = 0; i < effectFn.deps.length; i++) {
+          const deps = effectFn.deps[i];
+          deps.delete(effectFn)
+        }
+        effectFn.deps.length = 0
       }
       function track(target, key) {
         if (!activeEffect) return target[key]
@@ -385,12 +398,15 @@ export default {
           depsMap.set(key, (deps = new Set()))
         }
         deps.add(activeEffect)
+        activeEffect.deps.push(deps)
       }
       function trigger(target, key) {
         const depsMap = bucket.get(target)
         if (!depsMap) return
         const effects = depsMap.get(key)
-        effects && effects.forEach(fn => fn())
+        const effectsToRun = new Set(effects)
+        effectsToRun.forEach(effectFn => effectFn())
+        // effects && effects.forEach(fn => fn())
       }
       const obj = new Proxy(data, {
         get(target, key) {
@@ -405,13 +421,24 @@ export default {
       // 执行
       effect(() => {
         console.log('effect run :>> ');
-        document.body.innerText = obj.text
+        document.body.innerText = obj.ok ? obj.text : 'not'
       })
       setTimeout(() => {
-        // obj.text = 'hello vue3'
-        obj.notExist = 'hello vue3'
+        obj.text = 'hello vue3'
+        // obj.notExist = 'hello vue3'
       }, 2000)
     },
+    // 文字转语音
+    tts2vue() {
+      const synth = window.speechSynthesis;
+      const msg = new SpeechSynthesisUtterance();
+      msg.text = '你好';     // 文字内容
+      msg.lang = "zh-CN";  // 使用的语言:中文
+      msg.volume = 0.8;      // 声音音量：0-1
+      msg.rate = 1.5;        // 语速：0-10
+      msg.pitch = 0.8;       // 音高：0-1
+      synth.speak(msg);    // 
+    }
   },
 };
 </script>
