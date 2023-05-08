@@ -1,8 +1,6 @@
 <template>
-  <div id="app">
-    <!-- <img alt="Vue logo" src="./assets/logo.png"> -->
-    <!-- <HelloWorld msg="Welcome to Your Vue.js App" /> -->
-    <!-- <auto-input />  -->
+  <div>
+    <router-view></router-view>
   </div>
 </template>
 
@@ -34,7 +32,7 @@ export default {
     // this.runLeetcode();
     // others code
     // this.runOthers()
-    this.reactivity()
+    // this.reactivity()
   },
   methods: {
     // 运行所有的leetcode项目
