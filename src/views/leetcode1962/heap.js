@@ -21,18 +21,18 @@ function maxHeapify(A, i, heapSize = A.length) {
         A[i - 1] = A[largest - 1]
         A[largest - 1] = temp
         // 递归
-        this.maxHeapify(A, largest, heapSize)
+        maxHeapify(A, largest, heapSize)
     }
 }
 // 创建堆
 function buildMaxHeap(A) {
     for (let i = Math.floor(A.length / 2); i >= 1; i--) {
-        this.maxHeapify(A, i)
+        maxHeapify(A, i)
     }
 }
 // 堆排序
 function heapSort(array) {
-    this.buildMaxHeap(array)
+    buildMaxHeap(array)
     console.log('array :>> ', array)
     let heapSize = array.length
     for (let i = array.length; i >= 2; i--) {
@@ -42,7 +42,7 @@ function heapSort(array) {
         array[0] = temp
 
         heapSize--
-        this.maxHeapify(array, 1, heapSize)
+        maxHeapify(array, 1, heapSize)
     }
     return array
 }

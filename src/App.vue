@@ -5,27 +5,9 @@
 </template>
 
 <script>
-// import HelloWorld from "./components/HelloWorld.vue";
-// import AutoInput from "./components/auto-input.vue"
-import { BinarySearchTreeNode, BinarySearchTree } from './util/binary-search-tree'
-import { buildMaxHeap, maxHeapify } from "./util/heap";
-import {} from "./util/red-black-tree"
 
 export default {
   name: "App",
-  components: {
-    // HelloWorld,
-    // AutoInput
-  },
-  beforeCreate() {
-    // console.log("App beforeCreate :>> ");
-  },
-  created() {
-    // console.log("App created :>> ");
-  },
-  beforeMount() {
-    // console.log("App beforeMount :>> ");
-  },
   mounted() {
     // console.log("App mounted :>> ");
     // leetcode
@@ -68,11 +50,6 @@ export default {
       // let nums = [10,13,7,8,5,3]
       // let result = this.rearrangeArray(nums)
       // console.log('result :>> ', result);
-      // leetcode 1962
-      // let piles = [5, 4, 9];
-      // let k = 2;
-      // let result = this.minStoneSum(piles, k);
-      // console.log("result :>> ", result);
 
       // leetcode 剑指 Offer 22
       // function ListNode(val) {
@@ -105,29 +82,6 @@ export default {
       // let str = "2[1[a]3[b]2[3[c]4[d]]]"
       // let result = this.smartRepeat(str)
       // console.log('result :>> ', result);
-      // 堆排序
-      // let array = [16, 14, 10, 8, 7, 9, 3, 2, 4, 1]
-      // let result = this.heapSort(array)
-      // console.log('result :>> ', result)
-      // 二叉搜索树
-      let array = [15, 18, 17, 6, 20, 3, 7, 13, 2, 4, 9]
-      let tree = new BinarySearchTree()
-      array.forEach(item => {
-        // 依次插入对应节点，生成一棵二叉搜索树
-        tree.insert(new BinarySearchTreeNode(item))
-      })
-      console.log('tree.T.root :>> ', tree.T.root);
-      tree.inorderWalk(tree.T.root)
-      let result = tree.iterativeSearch(6)
-      console.log('result :>> ', result);
-      let next = tree.successor(result)
-      console.log('next :>> ', next);
-      console.log('max :>> ', tree.maximum(result));
-      console.log('min :>> ', tree.minimum(result));
-      
-      tree.delete(tree.iterativeSearch(6))
-      console.log('tree.T.root :>> ', tree.T.root);
-      tree.inorderWalk(tree.T.root)
 
     },
     // leetcode 76 滑动窗口法
@@ -300,33 +254,6 @@ export default {
         }
       }
       return result;
-    },
-    // leetcode 1962
-    minStoneSum: function (piles, k) {
-      // 1、暴力法
-      // for (let i = 0; i < k; i++) {
-      //   let maxIndex = 0;
-      //   let max = piles.reduce((num1, num2, index) => {
-      //     if (num1 < num2) {
-      //       maxIndex = index;
-      //       return num2;
-      //     } else {
-      //       return num1;
-      //     }
-      //   });
-      //   piles[maxIndex] = Math.ceil(max / 2);
-      //   maxIndex = 0;
-      // }
-      // return piles.reduce((sum, a) => sum + a);
-      
-      // 2、二叉堆法
-      buildMaxHeap(piles)
-      while(k > 0) {
-        piles[0] = Math.ceil(piles[0] / 2)
-        maxHeapify(piles, 1)
-        k --
-      }      
-      return piles.reduce((sum, a) => sum + a)
     },
     // leetcode 剑指 Offer 22
     getKthFromEnd: function(head, k) {

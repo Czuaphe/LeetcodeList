@@ -12,14 +12,11 @@ module.exports = {
           }
         ]
       },
-      // {
-      //   test: /\.js$/,
-      //   use: [
-      //     {
-      //       loader: 'vue-pretty-logger/lib/in-js'
-      //     }
-      //   ]
-      // }
+      {
+        test: /\.js$/,
+        use: ['vue-pretty-logger/lib/in-js'],
+        exclude: /node_modules/
+      }
     )
   }
 }

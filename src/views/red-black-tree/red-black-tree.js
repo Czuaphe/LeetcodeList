@@ -2,7 +2,7 @@ function isNIL(x) {
     return x.key == 'nil'
 }
 
-import { BinarySearchTree, BinarySearchTreeNode } from "./binary-search-tree.js"
+import { BinarySearchTree, BinarySearchTreeNode } from "../binary-search-tree/binary-search-tree"
 
 const COLOR = {
     RED: 'red',

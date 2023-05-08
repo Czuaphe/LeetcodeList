@@ -1,4 +1,6 @@
-import { isNIL } from "./util.js"
+function isNIL(ref) {
+    return ref == undefined || ref == null
+}
 
 class BinarySearchTreeNode {
     constructor(key, parent = null, left = null, right = null) {
@@ -109,7 +111,8 @@ class BinarySearchTree {
     inorderWalk(x) {
         if (!isNIL(x)) {
             this.inorderWalk(x.left)
-            console.log('key :>> ', x.key);
+            // eslint-disable-next-line no-unused-vars
+            const key = x.key // {#} -sign -i -t inorderWalk
             this.inorderWalk(x.right)
         }
     }
