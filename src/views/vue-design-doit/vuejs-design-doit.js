@@ -40,8 +40,9 @@ function trigger(target, key) {
     const depsMap = bucket.get(target)
     if (!depsMap) return
     const effects = depsMap.get(key)
-    const effectsToRun = new Set(effects) // 新增
-    effectsToRun.forEach(effectFn => effectFn()) // 新增
+    // 新复制一个Set，删除时就不会死循环
+    const effectsToRun = new Set(effects)
+    effectsToRun.forEach(effectFn => effectFn())
     // effects && effects.forEach(fn => fn()) // 死循环
 }
 const obj = new Proxy(data, {
