@@ -2,7 +2,7 @@
 
 // 设计
 let data = {
-    ok: false,
+    ok: true,
     text: 'hello world'
 }
 const bucket = new WeakMap()
@@ -16,9 +16,12 @@ function effect(fn) {
     effectFn.deps = []
     effectFn()
 }
-// eslint-disable-next-line no-unused-vars
 function cleanup(effectFn) {
-    
+    for (let i = 0; i < effectFn.deps.length; i++) {
+        const deps = effectFn.deps[i];
+        deps.delete(effectFn)
+    }
+    effectFn.deps.length = 0
 }
 function track(target, key) {
     if (!activeEffect) return target[key]
@@ -37,7 +40,9 @@ function trigger(target, key) {
     const depsMap = bucket.get(target)
     if (!depsMap) return
     const effects = depsMap.get(key)
-    effects && effects.forEach(fn => fn())
+    const effectsToRun = new Set(effects) // 新增
+    effectsToRun.forEach(effectFn => effectFn()) // 新增
+    // effects && effects.forEach(fn => fn()) // 死循环
 }
 const obj = new Proxy(data, {
     get(target, key) {
@@ -59,3 +64,7 @@ setTimeout(() => {
     obj.text = 'hello vue3'
     // obj.notExist = 'hello vue3'
 }, 2000)
+
+setTimeout(() => {
+    obj.ok = false
+}, 4000)

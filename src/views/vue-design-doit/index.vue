@@ -3,7 +3,7 @@
 </template>
 
 <script>
-// import "./vuejs-design-doit.js"
+import "./vuejs-design-doit.js"
 
 export default {
   name: "VueDesignDoit",
