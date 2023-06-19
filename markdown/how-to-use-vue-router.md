@@ -1,6 +1,6 @@
-# 怎么使用VueRouter3
+# 怎么在Vue项目中使用VueRouter
 
-1、首先下载依赖 npm install vue-router@3
+1、首先下载依赖 npm install vue-router@3 // Vue2下载vue-router的3版本，Vue3下载vue-router的4版本
 
 2、在src文件夹下新建router文件夹，再新建一个index.js的空文件
 

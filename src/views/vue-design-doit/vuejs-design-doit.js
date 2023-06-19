@@ -2,7 +2,7 @@
 
 // 设计
 let data = {
-    ok: true,
+    ok: false,
     text: 'hello world'
 }
 const bucket = new WeakMap()
@@ -18,7 +18,7 @@ function effect(fn) {
 }
 // eslint-disable-next-line no-unused-vars
 function cleanup(effectFn) {
-
+    
 }
 function track(target, key) {
     if (!activeEffect) return target[key]
