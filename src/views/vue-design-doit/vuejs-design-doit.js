@@ -7,11 +7,16 @@ let data = {
 }
 const bucket = new WeakMap()
 let activeEffect
+const effectStack = []
+
 function effect(fn) {
     const effectFn = () => {
         cleanup(effectFn)
         activeEffect = effectFn
+        effectStack.push(activeEffect)
         fn()
+        effectStack.pop()
+        activeEffect = effectStack[effectStack.length - 1]
     }
     effectFn.deps = []
     effectFn()
