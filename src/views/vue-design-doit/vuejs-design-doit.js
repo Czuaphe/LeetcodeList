@@ -3,7 +3,8 @@
 // 设计
 let data = {
     ok: true,
-    text: 'hello world'
+    text: 'hello world',
+    foo: 1
 }
 const bucket = new WeakMap()
 let activeEffect
@@ -46,7 +47,13 @@ function trigger(target, key) {
     if (!depsMap) return
     const effects = depsMap.get(key)
     // 新复制一个Set，删除时就不会死循环
-    const effectsToRun = new Set(effects)
+    const effectsToRun = new Set()
+    // 如果 trigger 触发执行的副作用函数与当前正在执行的副作用函数相同，则不触发执行
+    effects && effects.forEach(effectFn => {
+        if (effectFn != activeEffect) {
+            effectsToRun.push(effectFn)
+        }
+    })
     effectsToRun.forEach(effectFn => effectFn())
     // effects && effects.forEach(fn => fn()) // 死循环
 }
@@ -62,15 +69,20 @@ const obj = new Proxy(data, {
     }
 })
 // 执行
+// effect(() => {
+//     console.log('effect run :>> ');
+//     document.body.innerText = obj.ok ? obj.text : 'not'
+// })
 effect(() => {
-    console.log('effect run :>> ');
-    document.body.innerText = obj.ok ? obj.text : 'not'
+    console.log('obj.foo :>> ', obj.foo);
+    obj.foo ++
+    console.log('obj.foo :>> ', obj.foo);
 })
-setTimeout(() => {
-    obj.text = 'hello vue3'
-    // obj.notExist = 'hello vue3'
-}, 2000)
+// setTimeout(() => {
+//     obj.text = 'hello vue3'
+//     // obj.notExist = 'hello vue3'
+// }, 2000)
 
-setTimeout(() => {
-    obj.ok = false
-}, 4000)
+// setTimeout(() => {
+//     obj.ok = false
+// }, 4000)
