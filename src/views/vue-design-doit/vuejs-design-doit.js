@@ -10,7 +10,7 @@ const bucket = new WeakMap()
 let activeEffect
 const effectStack = []
 
-function effect(fn) {
+function effect(fn, options = {}) {
     const effectFn = () => {
         cleanup(effectFn)
         activeEffect = effectFn
@@ -19,6 +19,7 @@ function effect(fn) {
         effectStack.pop()
         activeEffect = effectStack[effectStack.length - 1]
     }
+    effectFn.options = options
     effectFn.deps = []
     effectFn()
 }
@@ -51,10 +52,17 @@ function trigger(target, key) {
     // 如果 trigger 触发执行的副作用函数与当前正在执行的副作用函数相同，则不触发执行
     effects && effects.forEach(effectFn => {
         if (effectFn != activeEffect) {
-            effectsToRun.push(effectFn)
+            effectsToRun.add(effectFn)
         }
     })
-    effectsToRun.forEach(effectFn => effectFn())
+    effectsToRun.forEach(effectFn => {
+        // 
+        if (effectFn.options.scheduler) {
+            effectFn.options.scheduler(effectFn)
+        } else {
+            effectFn()
+        }
+    })
     // effects && effects.forEach(fn => fn()) // 死循环
 }
 const obj = new Proxy(data, {
@@ -75,9 +83,15 @@ const obj = new Proxy(data, {
 // })
 effect(() => {
     console.log('obj.foo :>> ', obj.foo);
-    obj.foo ++
-    console.log('obj.foo :>> ', obj.foo);
+    // console.log('obj.foo :>> ', obj.foo);
+}, {
+    // scheduler(fn) {
+    //     setTimeout(fn)
+    // }
 })
+obj.foo ++
+obj.foo ++
+// console.log('over :>> ');
 // setTimeout(() => {
 //     obj.text = 'hello vue3'
 //     // obj.notExist = 'hello vue3'
