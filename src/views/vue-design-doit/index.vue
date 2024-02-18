@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import "./vuejs-design-doit.js"
+import { reactive, effect } from "./vuejs-design-doit.js"
 
 export default {
   name: "VueDesignDoit",
@@ -11,6 +11,18 @@ export default {
     return {
 
     }
-  }
+  },
+  created() {
+    let data = {
+        ok: true,
+        text: 'hello world',
+        foo: 1
+    }
+    let obj = reactive(data)
+    effect(() => {
+      console.log('obj.foo :>> ', obj.foo);
+    })
+    obj.foo ++
+  },
 }
 </script>

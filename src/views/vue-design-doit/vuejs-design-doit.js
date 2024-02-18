@@ -1,16 +1,12 @@
 // 《Vuejs 设计与实现》 响应性系统实现
 
 // 设计
-let data = {
-    ok: true,
-    text: 'hello world',
-    foo: 1
-}
+
 const bucket = new WeakMap()
 let activeEffect
 const effectStack = []
 
-function effect(fn, options = {}) {
+export function effect(fn, options = {}) {
     const effectFn = () => {
         cleanup(effectFn)
         activeEffect = effectFn
@@ -65,32 +61,35 @@ function trigger(target, key) {
     })
     // effects && effects.forEach(fn => fn()) // 死循环
 }
-const obj = new Proxy(data, {
-    get(target, key) {
-        track(target, key)
-        return target[key]
-    },
-    set(target, key, newVal) {
-        target[key] = newVal
-        trigger(target, key)
-        return true // 返回true表示属性设置成功
-    }
-})
+export function reactive(data) {
+    return new Proxy(data, {
+        get(target, key) {
+            track(target, key)
+            return target[key]
+        },
+        set(target, key, newVal) {
+            target[key] = newVal
+            trigger(target, key)
+            return true // 返回true表示属性设置成功
+        }
+    })
+}
+// const obj = reactive(data)
 // 执行
 // effect(() => {
 //     console.log('effect run :>> ');
 //     document.body.innerText = obj.ok ? obj.text : 'not'
 // })
-effect(() => {
-    console.log('obj.foo :>> ', obj.foo);
-    // console.log('obj.foo :>> ', obj.foo);
-}, {
-    // scheduler(fn) {
-    //     setTimeout(fn)
-    // }
-})
-obj.foo ++
-obj.foo ++
+// effect(() => {
+//     console.log('obj.foo :>> ', obj.foo);
+//     // console.log('obj.foo :>> ', obj.foo);
+// }, {
+//     // scheduler(fn) {
+//     //     setTimeout(fn)
+//     // }
+// })
+// obj.foo ++
+// obj.foo ++
 // console.log('over :>> ');
 // setTimeout(() => {
 //     obj.text = 'hello vue3'

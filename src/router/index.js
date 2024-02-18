@@ -10,6 +10,7 @@ const routes = [
   { path: '/leetcode28', component: () => import('../views/leetcode28') },
   { path: '/leetcode76', component: () => import('../views/leetcode76') },
   { path: '/leetcode119', component: () => import('../views/leetcode119') },
+  { path: '/leetcode233', component: () => import('../views/leetcode233') },
   { path: '/leetcode1962', component: () => import('../views/leetcode1962') },
   { path: '/leetcode1968', component: () => import('../views/leetcode1968') },
   { path: '/leetcode1984', component: () => import('../views/leetcode1984') },
