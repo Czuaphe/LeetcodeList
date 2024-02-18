@@ -13,6 +13,18 @@ export default {
     }
   },
   created() {
+    const jobQueue = new Set()
+    const p = Promise.resolve()
+    let isFlushing = false
+    function flushJob() {
+      if (isFlushing) return
+      isFlushing = true
+      p.then(() => {
+        jobQueue.forEach(job => job())
+      }).finally(() => {
+        isFlushing = false
+      })
+    }
     let data = {
         ok: true,
         text: 'hello world',
@@ -21,7 +33,15 @@ export default {
     let obj = reactive(data)
     effect(() => {
       console.log('obj.foo :>> ', obj.foo);
-    })
+    }, 
+    {
+      scheduler(fn) {
+        jobQueue.add(fn)
+        flushJob()
+      }
+    }
+    )
+    obj.foo ++
     obj.foo ++
   },
 }
