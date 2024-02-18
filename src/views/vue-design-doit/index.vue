@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import { reactive, effect } from "./vuejs-design-doit.js"
+import { reactive, effect, computed } from "./vuejs-design-doit.js"
 
 export default {
   name: "VueDesignDoit",
@@ -13,35 +13,42 @@ export default {
     }
   },
   created() {
-    const jobQueue = new Set()
-    const p = Promise.resolve()
-    let isFlushing = false
-    function flushJob() {
-      if (isFlushing) return
-      isFlushing = true
-      p.then(() => {
-        jobQueue.forEach(job => job())
-      }).finally(() => {
-        isFlushing = false
-      })
-    }
+    // const jobQueue = new Set()
+    // const p = Promise.resolve()
+    // let isFlushing = false
+    // function flushJob() {
+    //   if (isFlushing) return
+    //   isFlushing = true
+    //   p.then(() => {
+    //     jobQueue.forEach(job => job())
+    //   }).finally(() => {
+    //     isFlushing = false
+    //   })
+    // }
     let data = {
         ok: true,
         text: 'hello world',
-        foo: 1
+        foo: 1,
+        bar: 2
     }
     let obj = reactive(data)
+    // effect(() => {
+    //   console.log('obj.foo :>> ', obj.foo);
+    // }, 
+    // {
+    //   scheduler(fn) {
+    //     jobQueue.add(fn)
+    //     flushJob()
+    //   }
+    // }
+    // )
+    // obj.foo ++
+    // obj.foo ++
+    // 计算属性
+    const sumRes = computed(() => obj.foo + obj.bar)
     effect(() => {
-      console.log('obj.foo :>> ', obj.foo);
-    }, 
-    {
-      scheduler(fn) {
-        jobQueue.add(fn)
-        flushJob()
-      }
-    }
-    )
-    obj.foo ++
+      console.log('sumRes.value :>> ', sumRes.value);
+    })
     obj.foo ++
   },
 }

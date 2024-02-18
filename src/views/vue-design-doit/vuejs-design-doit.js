@@ -11,13 +11,17 @@ export function effect(fn, options = {}) {
         cleanup(effectFn)
         activeEffect = effectFn
         effectStack.push(activeEffect)
-        fn()
+        const res = fn()
         effectStack.pop()
         activeEffect = effectStack[effectStack.length - 1]
+        return res
     }
     effectFn.options = options
     effectFn.deps = []
-    effectFn()
+    if (!options.lazy) {
+        effectFn()
+    }
+    return effectFn
 }
 function cleanup(effectFn) {
     for (let i = 0; i < effectFn.deps.length; i++) {
@@ -73,6 +77,28 @@ export function reactive(data) {
             return true // 返回true表示属性设置成功
         }
     })
+}
+export function computed(getter) {
+    let value
+    let dirty = true
+    const effectFn = effect(getter, {
+        lazy: true,
+        scheduler() {
+            dirty = true
+            trigger(obj, "value")
+        }
+    })
+    const obj = {
+        get value() {
+            if (dirty) {
+                value = effectFn()
+                dirty = false
+            }
+            track(obj, "value")
+            return value
+        }
+    }
+    return obj
 }
 // const obj = reactive(data)
 // 执行
