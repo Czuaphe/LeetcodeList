@@ -100,6 +100,34 @@ export function computed(getter) {
     }
     return obj
 }
+function traverse(value, seen = new Set()) {
+    if (typeof value !== 'object' || value === null || seen.has(value)) return
+    seen.add(value)
+    for (const k in value) {
+        traverse(value[k], seen)
+    }
+}
+export function watch(source, cb) {
+    let getter
+    if (typeof source === 'function') {
+        getter = source
+    } else {
+        getter = traverse(source)
+    }
+    let oldValue, newValue
+    const effectFn = effect(
+        () => getter(), 
+        {
+            lazy: true,
+            scheduler() {
+                newValue = effectFn()
+                cb(newValue, oldValue)
+                oldValue = newValue
+            }
+        }
+    )
+    oldValue = effectFn()
+}
 // const obj = reactive(data)
 // 执行
 // effect(() => {

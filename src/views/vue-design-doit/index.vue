@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import { reactive, effect, computed } from "./vuejs-design-doit.js"
+import { reactive, effect, computed, watch } from "./vuejs-design-doit.js"
 
 export default {
   name: "VueDesignDoit",
@@ -13,6 +13,14 @@ export default {
     }
   },
   created() {
+    let data = {
+        ok: true,
+        text: 'hello world',
+        foo: 1,
+        bar: 2
+    }
+    let obj = reactive(data)
+    // 4.7例子 调度执行
     // const jobQueue = new Set()
     // const p = Promise.resolve()
     // let isFlushing = false
@@ -25,13 +33,6 @@ export default {
     //     isFlushing = false
     //   })
     // }
-    let data = {
-        ok: true,
-        text: 'hello world',
-        foo: 1,
-        bar: 2
-    }
-    let obj = reactive(data)
     // effect(() => {
     //   console.log('obj.foo :>> ', obj.foo);
     // }, 
@@ -44,11 +45,17 @@ export default {
     // )
     // obj.foo ++
     // obj.foo ++
-    // 计算属性
+    //4.8 计算属性
     const sumRes = computed(() => obj.foo + obj.bar)
     effect(() => {
       console.log('sumRes.value :>> ', sumRes.value);
     })
+    watch(
+      () => obj.foo,
+      (newValue, oldValue) => {
+        console.log('newValue, oldValue :>> ', newValue, oldValue);
+      }
+    )
     obj.foo ++
   },
 }
