@@ -30,11 +30,22 @@ function traverseFolder(directory) {
 }
 
 traverseFolder(path.resolve(__dirname, './views'))
-// console.log('pathList :>> ', pathList);
+console.log('pathList :>> ', pathList);
 const routerStr = pathList.map(path => {
   let index = path.lastIndexOf('\\')
   const name = path.substr(index + 1)
   return `{ path: '/${name}', component: () => import('../views/${name}') },`
 })
 console.log('routerStr :>> ', routerStr);
+const prefixStr = 'import VueRouter from "vue-router";\n'
+const suffixStr = 'const router = new VueRouter({routes});\nexport default router;'
+
+const resultStr = prefixStr + 'const routes = [\n'
+  + routerStr.join('\n')
+  + '\n];\n' + suffixStr;
+
+console.log('resultStr :>> ', resultStr);
+
+// todo 保存到router/index.js中
+
 
